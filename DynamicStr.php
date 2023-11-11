@@ -6,39 +6,32 @@
  * Author:      Edgar Khachaturov
  * License:     MIT
  * */
+declare(strict_types=1);
 
 if ( !defined('ABSPATH') ) {
     return;
 }
-include_once('Utilities.php');
-include_once('./inc/DynamicStrFunctions.php');
+include_once 'inc/DynamicStrDB.php';
+include_once 'inc/DynamicStrFunctions.php';
+include_once 'inc/DynamicStrGlobal.php';
 if (!class_exists('DynamicStr')){
     class DynamicStr
     {
         public function initialization(){
             $this->define('DynamicStr', __FILE__);
+            $this->hooks();
         }
 
         public function hooks() : void{
             register_activation_hook(__FILE__, [$this, 'activatedPlugin']);
+            add_action('wp_head', static function(){
+                echo dnn_('car', 'ru');
+            });
         }
 
         public function activatedPlugin() : void{
-            global $wpdb;
-            $this->createTable($wpdb);
-        }
-
-        private function createTable($wpdb) : void{
-            $sql = "CREATE TABLE IF NOT EXISTS `".DynamicStrDB::$tableName."` (
-                ID INT NOT NULL AUTO_INCREMENT,
-                originName VARCHAR(100) NOT NULL,
-                langSlug VARCHAR(10) NOT NULL,
-                groupName VARCHAR(100) NOT NULL,
-                translated VARCHAR(100) NOT NULL,
-                PRIMARY KEY (ID)
-            )";
-            $wpdb->query($sql);
-
+            $DynamicStrDB = new DynamicStrDB();
+            $DynamicStrDB->activateDB();
         }
 
         private function define($key, $val){
@@ -48,5 +41,5 @@ if (!class_exists('DynamicStr')){
         }
     }
     $DynamicStr = new DynamicStr();
-    $DynamicStr->hooks();
+    $DynamicStr->initialization();
 }
