@@ -5,22 +5,33 @@ if (!defined('ABSPATH')) {
 }
 class DynamicStrFunctions{
     public function getStringByLang(string $string, string $lang) : string{
-        $strings = DynamicStrDB::getStringByLang($string, $lang);
-        if (!empty($strings)){
-            return self::beautyRow($strings[0]);
+        if (apply_filters('check_lang', $lang)){
+            $strings = DynamicStrDB::getStringByLang($string, $lang);
+            if (!empty($strings)){
+                return self::beautyRow($strings[0]);
+            }
         }
         return self::notFound();
     }
 
     public function removeString(string $original, string $lang) : bool{
-        return DynamicStrDB::removeString($original, $lang);
+        if (apply_filters('check_lang', $lang)){
+            return DynamicStrDB::removeString($original, $lang);
+        }
+        return false;
     }
 
     public function setString(string $originName, string $langSlug, string $translated, string $groupName) : bool{
-        return DynamicStrDB::setString($originName, $langSlug, $translated, $groupName);
+        if (apply_filters('check_lang', $langSlug)){
+            return DynamicStrDB::setString($originName, $langSlug, $translated, $groupName);
+        }
+        return false;
     }
 
     public function getStringsByGroup($groupName, $lang, bool $associative = true) : array{
+        if (!apply_filters('check_lang', $lang)){
+            return [];
+        }
         $strings = DynamicStrDB::getStringsByGroup($groupName, $lang);
         if (!empty($strings)){
             $arr = [];

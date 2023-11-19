@@ -21,3 +21,7 @@ Get the translated strings by the code of language
 dnn_r($original, $language)
 ```
 Remove the translation of the string
+```php
+dnn_langs()
+```
+Returns all slugs of languages

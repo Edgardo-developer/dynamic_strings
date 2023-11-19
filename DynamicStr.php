@@ -24,9 +24,17 @@ if (!class_exists('DynamicStr')){
 
         public function hooks() : void{
             register_activation_hook(__FILE__, [$this, 'activatedPlugin']);
+            add_action('check_lang', [$this, 'checkLanguageExists']);
             add_action('wp_head', static function(){
-                echo dnn_('car', 'ru');
+                print_r(dnn_langs());
             });
+        }
+
+        public function checkLanguageExists($langCode){
+            if (!file_exists('/assets/images/country_flag/'.$langCode.'.svg')){
+                return '';
+            }
+            return $langCode;
         }
 
         public function activatedPlugin() : void{

@@ -37,3 +37,16 @@ function dnn_r(string $original, string $language) : void{
         $DynamicStrFunctions->removeString($original, strtolower($language));
     }
 }
+
+function dnn_langs() : array{
+    $directoryPath = __DIR__.'/../assets/images/country_flag';
+    $directoryFiles = scandir($directoryPath);
+    foreach ($directoryFiles as $directoryFileKey => &$directoryFile){
+        if ($directoryFileKey < 2){
+            unset($directoryFiles[$directoryFileKey]);
+        }
+        $fileName = explode('.', $directoryFile);
+        $directoryFile = $fileName[0];
+    }
+    return array_values($directoryFiles);
+}
