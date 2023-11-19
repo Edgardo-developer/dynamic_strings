@@ -24,6 +24,8 @@ if (!class_exists('DynamicStr')){
 
         public function hooks() : void{
             register_activation_hook(__FILE__, [$this, 'activatedPlugin']);
+            add_action('admin_menu', [$this, 'DyStrMenu']);
+            add_action('admin_enqueue_scripts', [$this, 'DyStrResources']);
             add_action('check_lang', [$this, 'checkLanguageExists']);
         }
 
@@ -32,6 +34,17 @@ if (!class_exists('DynamicStr')){
                 return '';
             }
             return $langCode;
+        }
+
+        public function DyStrResources() : void{
+            wp_enqueue_style('dystr', plugins_url('dynamic-strings/assets/css/styles.css'));
+        }
+
+        public function DyStrMenu(){
+            add_menu_page('Dynamic Strings', 'Dynamic Strings', 'edit_others_posts',
+            'dystr', static function(){
+                require_once('inc/DynamicStrAdminPage.php');
+            }, 'dashicons-editor-insertmore');
         }
 
         public function activatedPlugin() : void{
