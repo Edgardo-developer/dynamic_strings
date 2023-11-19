@@ -25,9 +25,6 @@ if (!class_exists('DynamicStr')){
         public function hooks() : void{
             register_activation_hook(__FILE__, [$this, 'activatedPlugin']);
             add_action('check_lang', [$this, 'checkLanguageExists']);
-            add_action('wp_head', static function(){
-                print_r(dnn_langs());
-            });
         }
 
         public function checkLanguageExists($langCode){
